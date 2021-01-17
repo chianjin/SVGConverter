@@ -9,6 +9,10 @@ class MainFrame( SVGConvertorUI.MainFrameUI ):
 		SVGConvertorUI.MainFrameUI.__init__( self, parent )
 
 	# Handlers for MainFrameUI events.
+	def initMainFrame( self, event ):
+		# TODO: Implement initMainFrame
+		pass
+
 	def addFiles( self, event ):
 		# TODO: Implement addFiles
 		pass
@@ -25,16 +29,16 @@ class MainFrame( SVGConvertorUI.MainFrameUI ):
 		# TODO: Implement removeAll
 		pass
 
-	def convert( self, event ):
+	def export( self, event ):
 		# TODO: Implement convert
 		pass
 
-	def toggleFormatVersion( self, event ):
-		# TODO: Implement toggleFormatVersion
+	def toggleTypeVersion( self, event ):
+		# TODO: Implement toggleTypeVersion
 		pass
 
-	def disableOutputDirPicker( self, event ):
-		# TODO: Implement disableOutputDirPicker
+	def toggleExportDirPicker( self, event ):
+		# TODO: Implement toggleExportDirPicker
 		pass
 
 

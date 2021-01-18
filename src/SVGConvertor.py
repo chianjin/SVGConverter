@@ -60,18 +60,9 @@ class SVGConvertor(SVGConvertorUI.MainFrameUI):
         self.toggleExportButton()
 
     def export(self, event):
-        # export
-        try:
-            #print(self.exportFiles())
-            subprocess.run(self.exportFiles(), check=True)
-
-            if not self.export_to_source_folder:
-                move_cmd = self.moveExportedFiles()
-                if move_cmd:
-                    #print(move_cmd)
-                    subprocess.run(self.moveExportedFiles(), shell=True, check=True)
-        except subprocess.CalledProcessError:
-            wx.MessageBox(self, '发生错误，请检查')
+        self.exportFiles()
+        if not self.export_to_source_folder:
+            self.moveExportedFiles()
 
     def exit(self, event):
         pass
@@ -174,18 +165,23 @@ class SVGConvertor(SVGConvertorUI.MainFrameUI):
         export_cmd = [self.inkscape_file]
         export_cmd.extend(self.export_options)
         export_cmd.extend(self.svg_files)
-        return export_cmd
+        try:
+            self.ExportButton.Disable()
+            p = subprocess.run(export_cmd)
+            print('Done')
+        except subprocess.CalledProcessError:
+            dialog = wx.MessageBox(self, '发生错误，请检查', '错误', style=wx.OK | wx.ICON_ERROR )
+            dialog.ShowModal()
+            dialog.Destroy()
+        finally:
+            self.ExportButton.Enable()
 
     def moveExportedFiles(self):
-        move_cmd = ['move']
-        export_files = []
         for file in self.svg_files:
-            filename, ext = os.path.splitext(file)
-            dirname, filename = os.path.split(filename)
+            dirname, filename = os.path.split(file)
             if dirname != self.export_folder:
-                export_files.append(os.path.join(dirname, '{0}.{1}'.format(filename, self.export_type)))
-        if export_files:
-            move_cmd.extend(export_files)
-            move_cmd.append(self.export_folder)
-            return move_cmd
-        return []
+                filename, ext = os.path.splitext(filename)
+                filename = '{0}.{1}'.format(filename, self.export_type)
+                source_file = os.path.join(dirname, filename)
+                dist_file = os.path.join(self.export_folder, filename)
+                os.replace(source_file, dist_file)

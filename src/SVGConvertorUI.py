@@ -37,8 +37,8 @@ class MainFrameUI ( wx.Frame ):
         self.AddFilesButton = wx.Button( self.MainPanel, wx.ID_ANY, u"添加文件", wx.DefaultPosition, wx.DefaultSize, 0 )
         ButtonSizer.Add( self.AddFilesButton, 0, wx.ALL, 5 )
 
-        self.AddDirButton = wx.Button( self.MainPanel, wx.ID_ANY, u"添加目录", wx.DefaultPosition, wx.DefaultSize, 0 )
-        ButtonSizer.Add( self.AddDirButton, 0, wx.ALL, 5 )
+        self.AddFolderButton = wx.Button( self.MainPanel, wx.ID_ANY, u"添加文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
+        ButtonSizer.Add( self.AddFolderButton, 0, wx.ALL, 5 )
 
         self.RemoveButton = wx.Button( self.MainPanel, wx.ID_ANY, u"移除", wx.DefaultPosition, wx.DefaultSize, 0 )
         ButtonSizer.Add( self.RemoveButton, 0, wx.ALL, 5 )
@@ -46,19 +46,22 @@ class MainFrameUI ( wx.Frame ):
         self.RemoveAllButton = wx.Button( self.MainPanel, wx.ID_ANY, u"移除全部", wx.DefaultPosition, wx.DefaultSize, 0 )
         ButtonSizer.Add( self.RemoveAllButton, 0, wx.ALL, 5 )
 
-
-        ButtonSizer.Add( ( 0, 0), 1, wx.EXPAND, 5 )
-
         self.ExportButton = wx.Button( self.MainPanel, wx.ID_ANY, u"转换", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.ExportButton.Enable( False )
 
         ButtonSizer.Add( self.ExportButton, 0, wx.ALL, 5 )
 
 
-        SVGSizer.Add( ButtonSizer, 0, 0, 5 )
+        ButtonSizer.Add( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.ExitButton = wx.Button( self.MainPanel, wx.ID_ANY, u"退出", wx.DefaultPosition, wx.DefaultSize, 0 )
+        ButtonSizer.Add( self.ExitButton, 0, wx.ALL, 5 )
 
 
-        PanelSizer.Add( SVGSizer, 0, wx.EXPAND, 5 )
+        SVGSizer.Add( ButtonSizer, 0, wx.EXPAND, 5 )
+
+
+        PanelSizer.Add( SVGSizer, 1, wx.EXPAND, 5 )
 
         ExportTypeSizer = wx.StaticBoxSizer( wx.StaticBox( self.MainPanel, wx.ID_ANY, u"输出格式" ), wx.HORIZONTAL )
 
@@ -146,29 +149,35 @@ class MainFrameUI ( wx.Frame ):
 
         OutputSizer = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.ExportDirLabel = wx.StaticText( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"输出文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
-        self.ExportDirLabel.Wrap( -1 )
+        self.ExportFolderLabel = wx.StaticText( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"输出文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.ExportFolderLabel.Wrap( -1 )
 
-        OutputSizer.Add( self.ExportDirLabel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        OutputSizer.Add( self.ExportFolderLabel, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-        self.ExportDir = wx.DirPickerCtrl( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, u"Select a folder", wx.DefaultPosition, wx.DefaultSize, wx.DIRP_DEFAULT_STYLE|wx.DIRP_DIR_MUST_EXIST )
-        OutputSizer.Add( self.ExportDir, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.ExportFolder = wx.TextCtrl( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
+        OutputSizer.Add( self.ExportFolder, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-        self.SourceDirCheck = wx.CheckBox( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"原文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
-        OutputSizer.Add( self.SourceDirCheck, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        self.ExportFolderButton = wx.Button( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"选择文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
+        OutputSizer.Add( self.ExportFolderButton, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.ExportToSourceFolderCheck = wx.CheckBox( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"输出至原文件夹", wx.DefaultPosition, wx.DefaultSize, 0 )
+        OutputSizer.Add( self.ExportToSourceFolderCheck, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
         ExportOptionSizer.Add( OutputSizer, 1, wx.EXPAND, 5 )
 
         InkscapeSizer = wx.BoxSizer( wx.HORIZONTAL )
 
-        self.InkscapeLable = wx.StaticText( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"Inkscape", wx.DefaultPosition, wx.DefaultSize, 0 )
+        self.InkscapeLable = wx.StaticText( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"Inkscape 程序", wx.DefaultPosition, wx.DefaultSize, 0 )
         self.InkscapeLable.Wrap( -1 )
 
         InkscapeSizer.Add( self.InkscapeLable, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-        self.InkscapeFile = wx.FilePickerCtrl( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, u"Select a file", u"*.*", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE|wx.FLP_FILE_MUST_EXIST )
+        self.InkscapeFile = wx.TextCtrl( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_READONLY )
         InkscapeSizer.Add( self.InkscapeFile, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+        self.InkscapeButton = wx.Button( ExportOptionSizer.GetStaticBox(), wx.ID_ANY, u"选择 Inkscape", wx.DefaultPosition, wx.DefaultSize, 0 )
+        InkscapeSizer.Add( self.InkscapeButton, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
         ExportOptionSizer.Add( InkscapeSizer, 1, wx.EXPAND, 5 )
@@ -180,7 +189,7 @@ class MainFrameUI ( wx.Frame ):
         self.MainPanel.SetSizer( PanelSizer )
         self.MainPanel.Layout()
         PanelSizer.Fit( self.MainPanel )
-        MainSizer.Add( self.MainPanel, 1, wx.EXPAND |wx.ALL, 0 )
+        MainSizer.Add( self.MainPanel, 1, wx.ALL|wx.EXPAND, 0 )
 
 
         self.SetSizer( MainSizer )
@@ -192,13 +201,15 @@ class MainFrameUI ( wx.Frame ):
         # Connect Events
         self.Bind( wx.EVT_SHOW, self.initMainFrame )
         self.AddFilesButton.Bind( wx.EVT_BUTTON, self.addFiles )
-        self.AddDirButton.Bind( wx.EVT_BUTTON, self.addDirectory )
+        self.AddFolderButton.Bind( wx.EVT_BUTTON, self.addFolder )
         self.RemoveButton.Bind( wx.EVT_BUTTON, self.removeFiles )
         self.RemoveAllButton.Bind( wx.EVT_BUTTON, self.removeAll )
         self.ExportButton.Bind( wx.EVT_BUTTON, self.export )
-        self.ExportType.Bind( wx.EVT_CHOICE, self.toggleTypeVersion )
-        self.SourceDirCheck.Bind( wx.EVT_CHECKBOX, self.toggleExportDirPicker )
-        self.InkscapeFile.Bind( wx.EVT_FILEPICKER_CHANGED, self.setInkscapeFile )
+        self.ExitButton.Bind( wx.EVT_BUTTON, self.exit )
+        self.ExportType.Bind( wx.EVT_CHOICE, self.setExportType )
+        self.ExportFolderButton.Bind( wx.EVT_BUTTON, self.setExportFolder )
+        self.ExportToSourceFolderCheck.Bind( wx.EVT_CHECKBOX, self.setExportToSourceFolder )
+        self.InkscapeButton.Bind( wx.EVT_BUTTON, self.setInkscapeFile )
 
     def __del__( self ):
         pass
@@ -211,7 +222,7 @@ class MainFrameUI ( wx.Frame ):
     def addFiles( self, event ):
         event.Skip()
 
-    def addDirectory( self, event ):
+    def addFolder( self, event ):
         event.Skip()
 
     def removeFiles( self, event ):
@@ -223,10 +234,16 @@ class MainFrameUI ( wx.Frame ):
     def export( self, event ):
         event.Skip()
 
-    def toggleTypeVersion( self, event ):
+    def exit( self, event ):
         event.Skip()
 
-    def toggleExportDirPicker( self, event ):
+    def setExportType( self, event ):
+        event.Skip()
+
+    def setExportFolder( self, event ):
+        event.Skip()
+
+    def setExportToSourceFolder( self, event ):
         event.Skip()
 
     def setInkscapeFile( self, event ):

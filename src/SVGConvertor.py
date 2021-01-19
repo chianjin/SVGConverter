@@ -168,7 +168,6 @@ class SVGConvertor(SVGConvertorUI.MainFrameUI):
         try:
             self.ExportButton.Disable()
             p = subprocess.run(export_cmd)
-            print('Done')
         except subprocess.CalledProcessError:
             dialog = wx.MessageBox(self, '发生错误，请检查', '错误', style=wx.OK | wx.ICON_ERROR )
             dialog.ShowModal()
